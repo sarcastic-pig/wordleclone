@@ -12,22 +12,32 @@ def get_word():
     print(secret_word)
     return secret_word
 
+def split_word(x):
+    return list(x)
+    
+#print(split_word("words"))
 
-word = get_word()
+answer = get_word()
+# ans_lst = split_word(answer)
 guesses = 0
 while guesses < 6:
     guess = input("Guess a word: ").lower()
+    # guess_lst = split_word(guess)
     if len(guess) == 5 and guess in wrd_bank:
-            if guess == word:
+            if guess == answer:
                 print("correct")
                 print(f"You guessed the word in {guesses + 1} guesses!")
                 break
             else:
-                #check if letters in guess are in word
+                for i in range(5):
+                    #check if letters in guess are in same spot as word
+                    if guess[i] == answer[i]:
+                        print(f"{guess[i]} is correct")
+                    #check if letters in guess are in word
+                    elif guess[i] in answer:
+                        print(f"{guess[i]} is in word")
 
-                #check if letters in guess are in same spot as word
-                
-                print("incorrect")
+                #print("incorrect")
                 guesses += 1
     else:
         if len(guess) != 5:
