@@ -14,7 +14,6 @@ def word_bank():
 def get_word():
     selection = word_bank()
     secret_word = random.choice(selection)
-    print(secret_word)
     return secret_word
 
 
@@ -34,6 +33,7 @@ def turn_loop():
     guess_choices = word_bank()
     guesses = 0               
     word_disp = []
+    guessed_words = []
     while guesses < 6:
         guess = input().lower()
         if len(guess) == 5 and guess in guess_choices:
@@ -47,34 +47,44 @@ def turn_loop():
                 break
             else:
                 green_letters = []
+                yellow_letters = []
+                for letter in range(5):
+                    if guess[letter] == answer[letter]:
+                        green_letters.append(guess[letter])
                 for i in range(5):
-                    if guess[i] in answer:
+                    if guess[i] in answer and guess not in guessed_words:
                         if guess[i] == answer[i]:
                             letter_disp.append(colored(guess[i], "green"))
                             if guess[i] in letter_count:
-                                green_letters.append(guess[i])
                                 letter_count.remove(guess[i])
                         else:
-                            letter_count = duplicate_letters(guess)
+                            letter_count = duplicate_letters(answer)
                             if guess[i] not in letter_count:
-                                if guess[i] not in green_letters:
-                                    letter_disp.append(colored(guess[i], "yellow"))     
+                                if guess[i] not in green_letters and guess[i] not in yellow_letters:
+                                    letter_disp.append(colored(guess[i], "yellow"))
+                                    yellow_letters.append(guess[i])    
                                 else:
                                     letter_disp.append(colored(guess[i], "white"))
                             elif guess[i] in letter_count:
                                 if guess[i] not in green_letters:
                                     letter_disp.append(colored(guess[i], "yellow"))
-                                    letter_count.remove(f'{guess[i]}')    
+                                    #letter_count.remove(f'{guess[i]}')    
                                 else:
                                     letter_disp.append(colored(guess[i], "white"))
                                     letter_count.remove(f'{guess[i]}')
+                    elif guess in guessed_words:
+                        print("Word already guessed.")
+                        break
                     else:
                         letter_disp.append(colored(guess[i], "white"))
                 
-                    
-                guesses += 1
-                word_disp.append(''.join(letter_disp))
-                print('\n'.join(word_disp))            
+                if guess in guessed_words:
+                    continue   
+                else:
+                    guessed_words.append(guess) 
+                    guesses += 1
+                    word_disp.append(''.join(letter_disp))
+                    print('\n'.join(word_disp))           
         else:
             if len(guess) != 5:
                 print("Guess must be 5 letters")
